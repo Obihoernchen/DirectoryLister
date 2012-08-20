@@ -1,4 +1,22 @@
 <?php
+// Appearantly using readfile(); can cause problems. Large files, which exceeds PHP's memory_limit, are most likely to fail.
+// Chunking the readfile solves this problem.
+// Credits to Rob Funk - http://www.php.net/manual/en/function.readfile.php#48683
+
+	function readfile_chunked ($fname) { 
+		$chunksize = 1*(1024*1024); // how many bytes per chunk 
+		$buffer = ''; 
+		$handle = fopen($fname, 'rb'); 
+		if ($handle === false) { 
+			return false; 
+		} 
+		while (!feof($handle)) { 
+			$buffer = fread($handle, $chunksize); 
+			print $buffer; 
+		} 
+		return fclose($handle); 
+	}
+	
 	$path = getcwd();	
 	// Get name of file to be downloaded	
 	$fname = $_GET['file']; 
@@ -80,8 +98,6 @@
 	*/
 	@header("Content-Transfer-Encoding: binary");
 	@header("Content-Length: ".filesize($fname));
-	@readfile($fname);
+	@readfile_chunked($fname);
 	exit(0);
 ?>
-
-
