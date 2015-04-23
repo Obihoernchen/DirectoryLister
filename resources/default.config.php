@@ -13,7 +13,7 @@ return array(
         '.htaccess',
         '.htpasswd',
         'resources',
-		'download.php,
+        'download.php',
      ),
     
     // Icon settings
